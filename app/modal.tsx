@@ -15,6 +15,9 @@ export default function ModalScreen() {
       <Text style={styles.title}>Gustavo Miguel Cristo</Text>
       <Text style={styles.title}>Online</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <Text style={styles.title}>Bio:</Text>
+
+      <Text style={styles.title2}>Explorador curioso da interseção entre tecnologia e arte, sempre em busca de novas maneiras de expressar ideias complexas de forma acessível. Apaixonado por ciência de dados e inteligência artificial, encontra beleza na análise de grandes conjuntos de dados e na criação de modelos preditivos. Quando não está imerso em linhas de código</Text>
       <EditScreenInfo path="app/modal.tsx" />
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
@@ -32,6 +35,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  title2: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    padding: 20,
   },
   separator: {
     marginVertical: 30,

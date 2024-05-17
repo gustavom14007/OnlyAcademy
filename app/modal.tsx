@@ -13,7 +13,7 @@ export default function ModalScreen() {
         style={styles.image}
       />
       <Text style={styles.title}>Gustavo Miguel Cristo</Text>
-      <Text style={styles.title}>Online</Text>
+      
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <Text style={styles.title}>Bio:</Text>
 

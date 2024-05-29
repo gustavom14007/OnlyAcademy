@@ -2,13 +2,18 @@ import { StyleSheet } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import FeedScreen from '@/components/FeedScreen';
+import SearchBar from '@/components/SearchBar';
 
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
+      
       <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <SearchBar onSearch={function (query: string): void {
+        throw new Error('Function not implemented.');
+      } }/>
+      <FeedScreen />
     </View>
   );
 }
@@ -16,12 +21,14 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#f0f0f0',
   },
   title: {
-    fontSize: 20,
+    padding: 10,
+    fontSize: 17,
     fontWeight: 'bold',
+    textAlign: 'center'
+   
   },
   separator: {
     marginVertical: 30,

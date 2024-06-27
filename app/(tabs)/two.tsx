@@ -8,10 +8,9 @@ import SearchBar from '@/components/SearchBar';
 export default function TabTwoScreen() {
   return (
     <View style={styles.container}>
-      <SearchBar onSearch={function (query: string): void {
-        throw new Error('Function not implemented.');
-      } }/>
-      <MessagesScreen/>
+      <Text style={styles.title}>Tab Two</Text>
+      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <EditScreenInfo path="app/(tabs)/two.tsx" />
     </View>
   );
 }

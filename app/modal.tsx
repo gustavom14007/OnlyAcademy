@@ -4,10 +4,12 @@ import { Platform, StyleSheet, Image } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import UploadImage from '@/components/UploadImage';
 
 export default function ModalScreen() {
   return (
     <View style={styles.container}>
+      
       <Image
         source={require('../assets/images/profile.png')}
         style={styles.image}
@@ -18,19 +20,17 @@ export default function ModalScreen() {
       <Text style={styles.title}>Bio:</Text>
 
       <Text style={styles.title2}>Explorador curioso da interseção entre tecnologia e arte, sempre em busca de novas maneiras de expressar ideias complexas de forma acessível. Apaixonado por ciência de dados e inteligência artificial, encontra beleza na análise de grandes conjuntos de dados e na criação de modelos preditivos. Quando não está imerso em linhas de código</Text>
-      <EditScreenInfo path="app/modal.tsx" />
-
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      
+      <UploadImage/>
     </View>
+    
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    
   },
   title: {
     fontSize: 20,

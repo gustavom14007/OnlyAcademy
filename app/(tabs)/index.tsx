@@ -4,6 +4,7 @@ import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import FeedScreen from '@/components/FeedScreen';
 import SearchBar from '@/components/SearchBar';
+import ImageListScreen from '@/components/ImageListScreen';
 
 export default function TabOneScreen() {
   return (
@@ -13,7 +14,8 @@ export default function TabOneScreen() {
       <SearchBar onSearch={function (query: string): void {
         throw new Error('Function not implemented.');
       } }/>
-      <FeedScreen />
+      <ImageListScreen/>
+      
     </View>
   );
 }

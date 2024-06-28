@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
-import FeedScreen from '@/components/FeedScreen';
+
 import SearchBar from '@/components/SearchBar';
 import ImageListScreen from '@/components/ImageListScreen';
 

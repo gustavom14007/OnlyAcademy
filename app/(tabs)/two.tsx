@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
-import MessagesScreen from '@/components/MessagesScreen';
+
 import SearchBar from '@/components/SearchBar';
 import Posts from '@/components/Posts';
 
@@ -13,7 +13,7 @@ export default function TabTwoScreen() {
         throw new Error('Function not implemented.');
       } }/>
       <Posts/>
-      <MessagesScreen />
+      
     </View>
   );
 }

@@ -1,19 +1,17 @@
-// Posts.js
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, FlatList, Alert } from "react-native";
 import { supabase } from "/GIT/OnlyAcademy/src/supabaseClient";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
-  const [userId, setUserId] = useState("1");
-  const [postType, setPostType] = useState("2");
-  const [content, setContent] = useState("1");
-  const [number, setNumber] = useState("1");
-  const [imageUrl, setImageUrl] = useState("1");
-  const [videoUrl, setVideoUrl] = useState("1");
-  const [likes, setLikes] = useState("1");
-  const [shares, setShares] = useState("1");
   const [selectedPost, setSelectedPost] = useState(null);
+
+  const initialPostState = {
+    user_id: "",
+    content: "",
+  };
+
+  const [postState, setPostState] = useState(initialPostState);
 
   useEffect(() => {
     fetchPosts();
@@ -21,12 +19,19 @@ const Posts = () => {
 
   const fetchPosts = async () => {
     try {
-      const { data, error } = await supabase.from("posts").select("*");
+      const { data, error } = await supabase
+        .from("posts")
+        .select("*")
+        .order("id", { ascending: false }); // Ordena por ID de forma descendente (último post primeiro)
       if (error) throw error;
       setPosts(data);
     } catch (error) {
       Alert.alert("Error fetching posts", error.message);
     }
+  };
+
+  const handleInputChange = (key, value) => {
+    setPostState({ ...postState, [key]: value });
   };
 
   const addPost = async () => {
@@ -35,21 +40,17 @@ const Posts = () => {
         .from("posts")
         .insert([
           {
-            user_id: userId,
-            post_type: postType,
-            content: content,
-            number: number,
-            image_url: imageUrl,
-            video_url: videoUrl,
-            likes: likes,
-            shares: shares,
-          },
+            user_id: postState.user_id,
+            content: postState.content,
+          }
         ])
         .select("*");
       if (error) throw error;
       if (!data) throw new Error("No data returned from insert");
 
-      setPosts([...posts, ...data]);
+      fetchPosts();
+
+      setPostState(initialPostState);
     } catch (error) {
       Alert.alert("Error adding post", error.message);
       console.error("Error adding post:", error);
@@ -61,23 +62,17 @@ const Posts = () => {
       const { data, error } = await supabase
         .from("posts")
         .update({
-          user_id: userId,
-          post_type: postType,
-          content: content,
-          number: number,
-          image_url: imageUrl,
-          video_url: videoUrl,
-          likes: likes,
-          shares: shares,
+          user_id: postState.user_id,
+          content: postState.content,
         })
         .eq("id", selectedPost.id)
         .select("*");
       if (error) throw error;
       if (!data) throw new Error("No data returned from update");
 
-      setPosts(
-        posts.map((post) => (post.id === selectedPost.id ? data[0] : post))
-      );
+      fetchPosts();
+
+      setPostState(initialPostState);
       setSelectedPost(null);
     } catch (error) {
       Alert.alert("Error updating post", error.message);
@@ -90,7 +85,7 @@ const Posts = () => {
       const { error } = await supabase.from("posts").delete().eq("id", id);
       if (error) throw error;
 
-      setPosts(posts.filter((post) => post.id !== id));
+      fetchPosts();
     } catch (error) {
       Alert.alert("Error deleting post", error.message);
       console.error("Error deleting post:", error);
@@ -99,64 +94,93 @@ const Posts = () => {
 
   const selectPost = (post) => {
     setSelectedPost(post);
-    setUserId(post.user_id);
-    setPostType(post.post_type);
-    setContent(post.content);
-    setNumber(post.number);
-    setImageUrl(post.image_url);
-    setVideoUrl(post.video_url);
-    setLikes(post.likes);
-    setShares(post.shares);
+    setPostState({
+      user_id: post.user_id,
+      content: post.content,
+    });
   };
 
+  const renderPostItem = ({ item }) => (
+    <View style={styles.postContainer}>
+      <Text style={styles.userName}>{item.user_id}</Text>
+      <Text style={styles.postContent}>{item.content}</Text>
+      <View style={styles.postActions}>
+        <Button title="Edit" onPress={() => selectPost(item)} />
+        <Button title="Delete" onPress={() => deletePost(item.id)} />
+      </View>
+    </View>
+  );
+
   return (
-    <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
-      <Text>Posts</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Posts</Text>
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View>
-            <Text>{item.content}</Text>
-            <Button title="Edit" onPress={() => selectPost(item)} />
-            <Button title="Delete" onPress={() => deletePost(item.id)} />
-          </View>
-        )}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderPostItem}
+        style={styles.postList}
       />
       <TextInput
+        style={styles.input}
         placeholder="User ID"
-        value={userId}
-        onChangeText={setUserId}
+        value={postState.user_id}
+        onChangeText={(text) => handleInputChange("user_id", text)}
       />
       <TextInput
-        placeholder="Post Type"
-        value={postType}
-        onChangeText={setPostType}
-      />
-      <TextInput
+        style={styles.input}
         placeholder="Content"
-        value={content}
-        onChangeText={setContent}
+        value={postState.content}
+        onChangeText={(text) => handleInputChange("content", text)}
+        multiline
       />
-      <TextInput placeholder="Number" value={number} onChangeText={setNumber} />
-      <TextInput
-        placeholder="Image URL"
-        value={imageUrl}
-        onChangeText={setImageUrl}
-      />
-      <TextInput
-        placeholder="Video URL"
-        value={videoUrl}
-        onChangeText={setVideoUrl}
-      />
-      <TextInput placeholder="Likes" value={likes} onChangeText={setLikes} />
-      <TextInput placeholder="Shares" value={shares} onChangeText={setShares} />
       <Button
         title={selectedPost ? "Update Post" : "Add Post"}
         onPress={selectedPost ? updatePost : addPost}
       />
     </View>
   );
+};
+
+const styles = {
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  postContainer: {
+    backgroundColor: "#ffffff",
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+  },
+  userName: {
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  postContent: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  postActions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+  postList: {
+    marginBottom: 20,
+  },
 };
 
 export default Posts;
